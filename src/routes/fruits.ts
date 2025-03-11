@@ -34,31 +34,31 @@ export const tiers = [
     {
         label: "wtf",
         points: 12,
-        size: 0.52,
+        size: 0.59,
         icon: "https://cdn.discordapp.com/emojis/1250291086841348227.webp?size=64"
     },
     {
         label: "heart eyes",
         points: 14,
-        size: 0.59,
+        size: 0.80,
         icon: "https://cdn.discordapp.com/emojis/1250288454659608608.webp?size=64"
     },
     {
         label: "love",
         points: 16,
-        size: 0.66,
+        size: 0.94,
         icon: "https://cdn.discordapp.com/emojis/1303060049714876527.webp?size=64"
     },
     {
         label: "kool",
         points: 18,
-        size: 0.73,
+        size: 1.08,
         icon: "https://cdn.discordapp.com/emojis/1194890988989206549.webp?size=64"
     },
     {
         label: "SURGE",
         points: 20,
-        size: 0.8,
+        size: 1.24,
         icon: "https://cdn.discordapp.com/emojis/773415528411693057.webp?size=64"
     }
 ]
