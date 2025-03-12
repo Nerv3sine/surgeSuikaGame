@@ -1,6 +1,11 @@
 <script lang="ts">
-    import { fruits, tiers } from './fruits'
+    import { tiers, leaderboard as presetScores } from './fruits'
     import Matter/*, {Engine, Render, Runner, Bodies, Composite, Events, World}*/ from 'matter-js'
+    const leaderBoardIcons = tiers.map((t) => {
+        return t.icon
+    }).toReversed()
+
+    var leaderboard = $state(presetScores)
 
     //weird bug fix
     var Engine = Matter.Engine,
@@ -21,16 +26,27 @@
 
     type State = 'startMenu' | 'playing' | 'losing' | 'lost'
 
-    const iconSize = 64
-    const maxCircleSize = 120
+    const sourceIconSize = 128
+    const originalMaxCircleSize = 120
+    const originalWidth = 600
+    const originalHeight = 1000
+
+    const gameScale = 1
+
+    const iconSize = sourceIconSize * gameScale
+    const maxCircleSize = originalMaxCircleSize * gameScale
+    const stageWidth = originalWidth * gameScale
+    const stageHeight = originalHeight * gameScale
+
     const spawnY = 110
-    const spawnX = 300
-    const fieldSize = 450
-    const rBound = 600 - Math.floor((600 - fieldSize)/2)
-    const lBound = Math.floor((600 - fieldSize)/2)
+    const spawnX = stageWidth/2
+    const fieldSize = stageWidth * 3/4
+    const rBound = stageWidth - Math.floor((stageWidth - fieldSize)/2)
+    const lBound = Math.floor((stageWidth - fieldSize)/2)
 
     var canvas: HTMLElement
     var nextInLine:Matter.Body
+    var userName = $state("")
 
     var points = $state(0)
 
@@ -38,7 +54,6 @@
     var engine = Engine.create();
 
     var gameMode: State = $state('startMenu')
-    var leaderboard = generateLeaderboard()
 
     var cooldownLock = false 
 
@@ -49,8 +64,8 @@
             element: canvas,
             engine: engine,
             options: {
-                width: 600,
-                height: 1000,
+                width: stageWidth,
+                height: stageHeight,
                 wireframes: false
             }
         });
@@ -71,7 +86,7 @@
 
     const startFreshGame = () => {
         //game boundaries
-        var leftWall = Bodies.rectangle(lBound, 550, 10, 700, 
+        var leftWall = Bodies.rectangle(lBound, Math.floor(stageHeight/2), 10, Math.floor(stageHeight * 0.8), 
         { 
             isStatic: true,
             render: {
@@ -81,7 +96,7 @@
                 category: ENV
             }
         })
-        var rightWall = Bodies.rectangle(rBound, 550, 10, 700, 
+        var rightWall = Bodies.rectangle(rBound, Math.floor(stageHeight/2), 10, Math.floor(stageHeight * 0.8), 
         { 
             isStatic: true,
             render: {
@@ -91,7 +106,8 @@
                 category: ENV
             }
         })
-        var ground = Bodies.rectangle(310, 900, 620, 50, 
+        const groundThickness = 100
+        var ground = Bodies.rectangle(Math.floor(stageWidth /2), Math.floor(stageHeight - groundThickness), Math.floor(stageWidth + 100), Math.floor(groundThickness / 2), 
         { 
             isStatic: true,
             render: {
@@ -101,7 +117,7 @@
                 category: ENV
             }
         })
-        var boundary = Bodies.rectangle(310, 220, 620, 5, 
+        var boundary = Bodies.rectangle(Math.floor(stageWidth /2), 220, Math.floor(stageWidth + 100), 5, 
         {
             label: "warning",
             isStatic: true,
@@ -113,7 +129,7 @@
                 category: ENV
             }
         })
-        var sensor = Bodies.rectangle(310, 200, 620, 40, 
+        var sensor = Bodies.rectangle(Math.floor(stageWidth /2), 200, Math.floor(stageWidth + 100), 40, 
         {
             label: "gameover",
             isStatic: true,
@@ -125,7 +141,7 @@
                 category: ENV
             }
         })
-        var rWall = Bodies.rectangle(rBound + 25, 450, 50, 900, 
+        var rWall = Bodies.rectangle(rBound + 25, Math.floor(stageHeight/2), 50, stageHeight, 
         { 
             isStatic: true,
             render: {
@@ -136,7 +152,7 @@
                 category: ENV
             }
         })
-        var lWall = Bodies.rectangle(lBound - 25, 450, 50, 900, 
+        var lWall = Bodies.rectangle(lBound - 25, Math.floor(stageHeight/2), 50, stageHeight, 
         { 
             isStatic: true,
             render: {
@@ -180,7 +196,7 @@
             if(idx < tiers.length){
                 spawnCircle(x,y,idx,false,true)
             }
-            particleExplosion(x, y, idx, true)
+            particleExplosion(x, y, 1, false)
         });
     });
 
@@ -235,16 +251,16 @@
         }, 1000)
     } 
 
-    function generateLeaderboard(){
-        let scores = new Set<number>()
+    // function generateLeaderboard(){
+    //     let scores = new Set<number>()
         
-        while(scores.size < 10){
-            const randVal = Math.floor(Math.random() * 1000)
-            scores.add(randVal)
-        }
+    //     while(scores.size < 10){
+    //         const randVal = Math.floor(Math.random() * 1000)
+    //         scores.add(randVal)
+    //     }
         
-        return ([...scores].sort(function(a,b){return (b-a)}))
-    }
+    //     return ([...scores].sort(function(a,b){return (b-a)}))
+    // }
 
     function dropTarget(e: MouseEvent){
         if(cooldownLock || gameMode !== 'playing'){
@@ -254,10 +270,11 @@
 
         let idx = parseInt(nextInLine.label)
 
-        if(x < lBound + tiers[idx].size * maxCircleSize){
-            x = lBound + tiers[idx].size * maxCircleSize
-        }else if (x > rBound - tiers[idx].size * maxCircleSize){
-            x = rBound - tiers[idx].size * maxCircleSize
+        const sizeConsideration = 10 * gameScale
+        if(x < lBound + tiers[idx].size * maxCircleSize + sizeConsideration){
+            x = lBound + tiers[idx].size * maxCircleSize + sizeConsideration
+        }else if (x > rBound - tiers[idx].size * maxCircleSize - sizeConsideration){
+            x = rBound - tiers[idx].size * maxCircleSize - sizeConsideration
         }
 
         
@@ -407,6 +424,30 @@
     function isCanvasVisible(){
         return gameMode == 'playing' || gameMode == 'losing'
     }
+
+    function finishRound(choice:State){
+        addToScoreboard(points)
+        points = 0
+        gameMode = choice
+    }
+
+    function addToScoreboard(pts :number){
+        if(pts < leaderboard[leaderboard.length - 1].points){
+            return
+        }
+        let username = userName
+        const fillernames = ["unknown otter", "otternonymous", "random sparks"]
+        if(username === ""){
+            username = fillernames[Math.floor(Math.random() * fillernames.length)]
+        }
+        leaderboard.push({
+            user: username,
+            points: pts
+        })
+        leaderboard.sort(function(a,b){return (b.points-a.points)})
+        leaderboard.pop()
+    }
+
 </script>
 
 <table class="leaderBoard" class:hoverClose={!isCanvasVisible()}>
@@ -419,16 +460,16 @@
         </tr>
     </thead>
     <tbody>
-        {#each tiers as tier}
+        {#each leaderboard as lScore}
             <tr>
                 <td class="icon">
-                    <img src={tier.icon}/>
+                    <img src={leaderBoardIcons[leaderboard.findIndex(t => t.user === lScore.user)]}/>
                 </td>
                 <td class="label" width=200>
-                    <p>{tier.label}</p>
+                    <p>{lScore.user}</p>
                 </td>
                 <td>
-                    <p>{leaderboard[tiers.findIndex(t => t.label === tier.label)]}</p>
+                    <p>{lScore.points}</p>
                 </td>
             </tr>
         {/each}
@@ -448,7 +489,7 @@
         {#each tiers as tier}
             <tr>
                 <td class="icon">
-                    <img src={tier.icon}/>
+                    <img src={tier.icon} alt={tier.label}/>
                 </td>
                 <td class="label" width=200>
                     <p>{tier.label}</p>
@@ -470,11 +511,13 @@
 
 {#if gameMode == 'lost'}
     <h2>Game Over</h2>
-    <h3>Final Score:</h3>
-    <h3>{points}</h3>
+    <input type="text" placeholder="'sparky'" bind:value={userName}/>
+    <h2>Final Score:</h2>
+    <h2>{points}</h2>
     <br/>
-    <button onclick={() => {points = 0; gameMode = 'playing'}}>Try Again</button>
-    <button onclick={() => {points = 0; gameMode = 'startMenu'}}>Exit</button>
+    <p class='note'>pressing either button will save your score</p>
+    <button onclick={() => finishRound('playing')}>Try Again</button>
+    <button onclick={() => finishRound('startMenu')}>Exit</button>
 {/if}
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <!-- svelte-ignore a11y_click_events_have_key_events -->
