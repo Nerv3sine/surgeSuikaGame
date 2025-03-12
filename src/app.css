@@ -12,6 +12,15 @@
 	--bg-2: hsl(220 20% 20%);
 	--border: hsl(180 100% 50%);
 	--pulse: hsl(9 100% 64%);
+
+    --surge-light-blue: #568cdb;
+    --surge-dark-blue: #1c307a;
+    --surge-yellow: #ffca61;
+    --surge-light-orange: #faaf40;
+    --surge-orange: #ff7e1e;
+    --surge-light-grey: #e2e2e2;
+    --surge-grey: #a0a0a0;
+    --surge-dark-grey: #303030;
 }
 
 html,
@@ -43,7 +52,7 @@ h1, h3, h2, p {
 }
 
 .note{
-    color: grey;
+    color: var(--surge-grey);
 }
 
 h1 + button {
@@ -64,11 +73,11 @@ button {
 	border: none !important;
 	text-transform: uppercase;
 	cursor: pointer;
-    background-color: #0099ff;
+    background-color: var(--surge-light-blue) !important;
 }
 
 button:hover{
-    background-color: #0076c5;
+    background-color: var(--surge-dark-blue) !important;
 }
 
 .flex{
@@ -186,7 +195,7 @@ input{
     padding-top: 1rem;
     background-color: none;
     border: none;
-    border-bottom: #0099ff 2.5px solid;
+    border-bottom: var(--surge-light-blue) 2.5px solid;
     font-family: 'poppins', sans-serif;
     background-color: #00000000;
     color: white;
@@ -196,5 +205,5 @@ input{
 input:focus{
     border-bottom: white 2.5px solid;
     outline: none;
-    caret-color: lightgray;
+    caret-color: var(--surge-grey);
 }
