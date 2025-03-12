@@ -2,7 +2,7 @@ import { s as safe_equals, e as equals, g as get_descriptor, r as run_all, i as 
 import { H as HYDRATION_ERROR, a as HYDRATION_START, b as HYDRATION_END, r as render, p as push$1, s as setContext, c as pop$1 } from "./index.js";
 import "clsx";
 const BROWSER = false;
-let base = "";
+let base = "/surgeSuikaGame";
 let assets = base;
 const app_dir = "_app";
 const initial = { base, assets };
@@ -1459,7 +1459,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "132rpyo"
+  version_hash: "1jzboxi"
 };
 async function get_hooks() {
   let handle;
