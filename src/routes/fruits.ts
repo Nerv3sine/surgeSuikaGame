@@ -104,6 +104,6 @@ export const tiers =
         label: "SURGE",
         points: 20,
         size: 1.24,
-        icon: "https://cdn.discordapp.com/emojis/773415528411693057.webp?size=128"
+        icon: "https://cdn.discordapp.com/emojis/1194523157072187492.webp?size=128"
     }
 ]
