@@ -141,17 +141,19 @@ table{
 }
 
 .leaderBoard{
-    left: 10%;
+    left: calc(27.5% - 325px);
+    width: 18vw;
+    min-width: 325px;
 }
 
 th{
-    padding: 10px;
+    padding: 10px 0px;
+    text-align: center;
     width: inherit;
     h2{
         width: fit-content !important;
     }
 }
-
 
 .canvas, .pointsTable{
     opacity: 1;
@@ -182,7 +184,17 @@ tbody{
 }
 
 .hoverClose{
-    left: 15%;
+    left: 16%;
+}
+
+@media (max-width: 1440px) {
+    .leaderBoard {
+        left: calc(25% - 265px);
+    }
+
+    .hoverClose {
+        left: calc(30% - 22vw);
+    }
 }
 
 .invisible{
