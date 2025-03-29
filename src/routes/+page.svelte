@@ -1,5 +1,7 @@
 <script lang="ts">
-    import { tiers, leaderboard as presetScores } from './fruits'
+    import { tiers, leaderboard as presetScores, anonymousAliases } from './fruits'
+    import {getLeaderboard, updateLeaderboard} from '../lib/LeaderboardManager'
+    import type {LeaderboardPosition} from '../lib/LeaderboardManager'
     import Matter/*, {Engine, Render, Runner, Bodies, Composite, Events, World}*/ from 'matter-js'
     const leaderBoardIcons = tiers.map((t) => {
         return t.icon
@@ -57,8 +59,18 @@
 
     var cooldownLock = false 
 
+    const getLeaderboardInfo = async () => {
+        try{
+            let tLeaderboard = await getLeaderboard()
+            leaderboard = tLeaderboard??leaderboard
+        }catch (e){
+            console.log(e)
+        }
+    }
+
     $effect(() => {
 
+        getLeaderboardInfo()
         // create a renderer
         var render = Render.create({
             element: canvas,
@@ -85,6 +97,7 @@
     })
 
     const startFreshGame = () => {
+        
         //game boundaries
         var leftWall = Bodies.rectangle(lBound, Math.floor(stageHeight/2), 10, Math.floor(stageHeight * 0.8), 
         { 
@@ -431,21 +444,31 @@
         gameMode = choice
     }
 
+    async function updateRefreshLeaderboard(data: LeaderboardPosition){
+        console.log("post")
+        let lboard = await updateLeaderboard(data)
+        leaderboard = lboard ?? leaderboard
+    }
+
     function addToScoreboard(pts :number){
-        if(pts < leaderboard[leaderboard.length - 1].points){
-            return
-        }
+        console.log("post1")
         let username = userName
-        const fillernames = ["unknown otter", "otternonymous", "random sparks"]
+        const fillernames = anonymousAliases
         if(username === ""){
             username = fillernames[Math.floor(Math.random() * fillernames.length)]
         }
-        leaderboard.push({
-            user: username,
+        
+        updateRefreshLeaderboard({
+            username: username,
             points: pts
         })
-        leaderboard.sort(function(a,b){return (b.points-a.points)})
-        leaderboard.pop()
+
+        // leaderboard.push({
+        //     username: username,
+        //     points: pts
+        // })
+        // leaderboard.sort(function(a,b){return (b.points-a.points)})
+        // leaderboard.pop()
     }
 
 </script>
@@ -463,10 +486,10 @@
         {#each leaderboard as lScore}
             <tr>
                 <td class="icon">
-                    <img src={leaderBoardIcons[leaderboard.findIndex(t => t.user === lScore.user)]}/>
+                    <img src={leaderBoardIcons[leaderboard.findIndex(t => t.username === lScore.username)]}/>
                 </td>
                 <td class="label" width=200>
-                    <p>{lScore.user}</p>
+                    <p>{lScore.username}</p>
                 </td>
                 <td>
                     <p>{lScore.points}</p>

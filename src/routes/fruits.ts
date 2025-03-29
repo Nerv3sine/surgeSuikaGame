@@ -1,45 +1,52 @@
+import type { LeaderboardPosition } from "$lib/LeaderboardManager"
+
 export const fruits = ["🍏","🍎","🍐","🍊","🍋","🍋‍🟩","🍌","🍉","🍇","🍓","🫐"]
 
-export const leaderboard = 
+export const anonymousAliases : string[] = 
+[
+    "unknown otter", "otternonymous", "random sparks"
+]
+
+export const leaderboard : LeaderboardPosition[] = 
 [
     {
-        "user": "emergesh",
+        "username": "emergesh",
         "points": 2748
     },
     {
-        "user": "eth1",
+        "username": "eth1",
         "points": 1442
     },
     {
-        "user": "keyoo65",
+        "username": "keyoo65",
         "points": 1132
     },
     {
-        "user": "yifei9119",
+        "username": "yifei9119",
         "points": 648
     },
     {
-        "user": "goldentoaste",
+        "username": "goldentoaste",
         "points": 468
     },
     {
-        "user": "Nerv3sine",
+        "username": "Nerv3sine",
         "points": 400
     },
     {
-        "user": "sparky waz here",
+        "username": "sparky waz here",
         "points": 372
     },
     {
-        "user": "stormy B)",
+        "username": "stormy B)",
         "points": 361
     },
     {
-        "user": "daehyung (hax)",
+        "username": "daehyung (hax)",
         "points": 196
     },
     {
-        "user": "bewient (hax)",
+        "username": "bewient (hax)",
         "points": 100
     }
 ]
