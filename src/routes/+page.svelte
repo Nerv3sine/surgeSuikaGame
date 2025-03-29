@@ -486,7 +486,7 @@
         {#each leaderboard as lScore}
             <tr>
                 <td class="icon">
-                    <img src={leaderBoardIcons[leaderboard.findIndex(t => t.username === lScore.username)]}/>
+                    <img src={leaderBoardIcons[leaderboard.findIndex(t => t.points === lScore.points)]}/>
                 </td>
                 <td class="label" width=200>
                     <p>{lScore.username}</p>
