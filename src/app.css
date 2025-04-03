@@ -197,6 +197,16 @@ tbody{
     }
 }
 
+@media (max-width: 800px) {
+    .leaderBoard {
+        top: 1200px;
+    }
+
+    .pointsTable {
+        visibility: hidden;
+    }
+}
+
 .invisible{
     opacity: 0;
 }
