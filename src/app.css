@@ -199,7 +199,12 @@ tbody{
 
 @media (max-width: 800px) {
     .leaderBoard {
-        top: 1200px;
+        top: 1100px;
+        left: calc(55vw);
+    }
+
+    .hoverClose { 
+        left: calc(55vw);
     }
 
     .pointsTable {
