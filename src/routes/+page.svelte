@@ -1,7 +1,7 @@
 <script lang="ts">
     import { tiers, leaderboard as presetScores, anonymousAliases } from './fruits'
-    import {getLeaderboard, updateLeaderboard} from '../lib/LeaderboardManager'
-    import type {LeaderboardPosition} from '../lib/LeaderboardManager'
+    import {getLeaderboard, updateLeaderboard} from '../lib/Firebase/LeaderboardManager'
+    import type {LeaderboardPosition} from '../lib/Firebase/LeaderboardManager'
     import Matter from 'matter-js'
     const leaderBoardIcons = tiers.map((t) => {
         return t.icon

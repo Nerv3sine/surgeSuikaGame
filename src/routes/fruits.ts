@@ -1,4 +1,4 @@
-import type { LeaderboardPosition } from "$lib/LeaderboardManager"
+import type { LeaderboardPosition } from "$lib/Firebase/LeaderboardManager"
 
 export const fruits = ["🍏","🍎","🍐","🍊","🍋","🍋‍🟩","🍌","🍉","🍇","🍓","🫐"]
 
