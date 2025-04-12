@@ -3,6 +3,8 @@
     import {getLeaderboard, updateLeaderboard} from '../lib/Firebase/LeaderboardManager'
     import type {LeaderboardPosition} from '../lib/Firebase/LeaderboardManager'
     import Matter from 'matter-js'
+
+    // import SuikaStage from "$lib/Suika/Stage.svelte"
     const leaderBoardIcons = tiers.map((t) => {
         return t.icon
     }).toReversed()
@@ -45,6 +47,8 @@
     const fieldSize = stageWidth * 3/4
     const rBound = stageWidth - Math.floor((stageWidth - fieldSize)/2)
     const lBound = Math.floor((stageWidth - fieldSize)/2)
+
+    var mousePosX = spawnX
 
     var canvas: HTMLElement
     var nextInLine:Matter.Body
@@ -275,50 +279,49 @@
     //     return ([...scores].sort(function(a,b){return (b-a)}))
     // }
 
-    function dropTarget(e: MouseEvent){
-        if(cooldownLock || gameMode !== 'playing'){
-            return
-        }
-        let x = e.clientX - parseFloat(getComputedStyle(e.currentTarget as Element)['left'].split("px")[0])
-
-        let idx = parseInt(nextInLine.label)
-
+    function getSafeX(idx: number){
+        let x = mousePosX - parseFloat(getComputedStyle(canvas)['left'].split("px")[0])
         const sizeConsideration = 10 * gameScale
         if(x < lBound + tiers[idx].size * maxCircleSize + sizeConsideration){
             x = lBound + tiers[idx].size * maxCircleSize + sizeConsideration
         }else if (x > rBound - tiers[idx].size * maxCircleSize - sizeConsideration){
             x = rBound - tiers[idx].size * maxCircleSize - sizeConsideration
         }
+        return x
+    }
 
-        
-        let t = 0
-        let dx = (x - spawnX) / 10
-        cooldownLock = true
-        const moveToPosition = () => {
-            setTimeout(() => {
-                Body.setPosition(nextInLine, {x: spawnX + dx * t, y: spawnY})
-                t++
-                if(t < 10){
-                    moveToPosition()
-                }else{
-                    World.remove(engine.world, [nextInLine])
-                    
-                    spawnCircle(x, spawnY, idx)
-                    
-                    setTimeout(() => {
-                        prepareNextTarget() 
-                        cooldownLock = false
-                    }, 500);
-                }
-            }, 10)
+    function moveWithMouse(e: MouseEvent){
+        mousePosX = e.clientX
+        if(cooldownLock || gameMode !== 'playing'){
+            return
         }
-        moveToPosition()
+        let x = getSafeX(parseInt(nextInLine.label));
+
+        Body.setPosition(nextInLine, {x: x, y: spawnY})
+    }
+
+    function dropTarget(e: MouseEvent){
+        if(cooldownLock || gameMode !== 'playing'){
+            return
+        }
+        let posX = nextInLine.position.x;
+        let id = parseInt(nextInLine.label);
+        cooldownLock = true
+        World.remove(engine.world, [nextInLine])
+                    
+        spawnCircle(posX, spawnY, id)
+        setTimeout(() => {
+            prepareNextTarget()
+            cooldownLock = false
+        }, 500);
     }
 
     function prepareNextTarget(){
         const idx = Math.floor(Math.random() * 5/*tiers.length*/)
+        let x = spawnX
+        x = getSafeX(idx)
         
-        nextInLine = spawnCircle(spawnX,spawnY,idx,true)
+        nextInLine = spawnCircle(x,spawnY,idx,true)
     }
 
     function spawnCircle(x:number, y:number, idx:number, staticState:boolean = false, legible = false){
@@ -544,6 +547,7 @@
 {/if}
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <!-- svelte-ignore a11y_click_events_have_key_events -->
-<div class="canvas" class:playActive={isCanvasVisible()} class:invisible={!isCanvasVisible()} bind:this={canvas} onclick={dropTarget}>
+<div class="canvas" class:playActive={isCanvasVisible()} class:invisible={!isCanvasVisible()} bind:this={canvas} onclick={dropTarget} onmousemove={moveWithMouse}>
     <h3 id="pts" class="UI">Points: {points}</h3>
+    <!-- <SuikaStage callback={(pts: number) => {points+= pts}}/> -->
 </div>
