@@ -27,7 +27,7 @@
     const OBJ = 0x002
     const ENV = 0x004
 
-    const debug = true
+    const debug = false
     var gameMode: State = $state(State.startMenu)
 
     let {updateLeaderboard, tiers, sourceIconSize} : stageParams = $props();
