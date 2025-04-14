@@ -1,8 +1,7 @@
 <script lang="ts">
     import './Suika.css'
-    import {State, themeColors} from './SuikaController.svelte'
+    import {State, themeColors, tiers, sourceIconSize} from './SuikaController.svelte'
     import GameOverMenu from './GameOverMenu.svelte';
-    import type { tierData } from './SuikaController.svelte';
     import Matter from 'matter-js';
 
     var Engine = Matter.Engine,
@@ -16,8 +15,6 @@
 
     interface stageParams {
         updateLeaderboard: () => void;
-        tiers: tierData[];
-        sourceIconSize: number;
     }
 
     const CAT_LEGIBLE = "#00FF00";
@@ -30,7 +27,7 @@
     const debug = false
     var gameMode: State = $state(State.startMenu)
 
-    let {updateLeaderboard, tiers, sourceIconSize} : stageParams = $props();
+    let {updateLeaderboard} : stageParams = $props();
 
     const circleFactor = 0.12;
     const originalWidth = 600;

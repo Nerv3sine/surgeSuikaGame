@@ -5,6 +5,8 @@ export enum State {
     endScreen
 }
 
+export const sourceIconSize = 128
+
 export const themeColors = {
     primary: "#5555FF",
     secondary: "#ffb300",

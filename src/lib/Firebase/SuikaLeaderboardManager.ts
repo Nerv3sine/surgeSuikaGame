@@ -1,4 +1,4 @@
-import { getFbDoc, retrieveFbDoc, setFbDoc } from "./FirebaseManager";
+import { getFbDoc, retrieveFbDoc, setFbDoc } from "./SuikaFirebaseManager";
 
 export interface LeaderboardPosition{
     username: string;

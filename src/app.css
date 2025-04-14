@@ -49,66 +49,35 @@ h1, h3, h2, p {
     display: flex;
 }
 
-.centre{
-    text-align: center;
-}
-
 #stage{
     position: absolute;
     left: 30%;
 }
 
-.playActive *{
-    visibility: visible;
-    opacity: 1;
-}
-
-.playActive{
-    visibility: visible !important;
-    opacity: 1 !important;
-}
-
-.UI{
-    z-index: 2;
-}
-
-table{
-    border: 1px white solid;
-    border-radius: 20px;
-    overflow: hidden;
-    border-spacing: 0;
-
+.display{
     top: 20%;
-
     position: absolute;
-    transition: left 1s;
 }
 
 .pointsTable{
     left: calc(32.5% + 600px);
-}
 
-.leaderBoard{
-    left: calc(27.5% - 325px);
-    width: 18vw;
-    min-width: 325px;
-}
+    border: 2px white solid;
+    border-radius: 20px;
+    overflow: hidden;
+    border-spacing: 0;
 
-th{
-    padding: 10px 0px;
-    text-align: center;
-    width: inherit;
-    h2{
-        width: fit-content !important;
+    th{
+        padding: 10px 0px;
+        text-align: center;
+        width: inherit;
+        h2{
+            width: fit-content !important;
+        }
+
+        background-color: var(--bg-1);
     }
-}
 
-.canvas, .pointsTable{
-    opacity: 1;
-    transition: opacity 1s .5s;
-}
-
-tbody{
     td{
         padding: 5px 20px;
     }
@@ -131,13 +100,19 @@ tbody{
     }
 }
 
+#leaderBoard{
+    left: calc(30vw - 350px);
+    width: 18vw;
+    min-width: 325px;
+}
+
 .hoverClose{
     left: 16%;
 }
 
 @media (max-width: 1440px) {
-    .leaderBoard {
-        left: calc(25% - 265px);
+    #leaderBoard {
+        left: calc(25vw - 265px);
     }
 
     .hoverClose {
@@ -146,8 +121,8 @@ tbody{
 }
 
 @media (max-width: 800px) {
-    .leaderBoard {
-        top: 1100px;
+    #leaderBoard {
+        top: 1000px !important;
         left: calc(55vw);
     }
 
@@ -158,8 +133,4 @@ tbody{
     .pointsTable {
         visibility: hidden;
     }
-}
-
-.invisible{
-    opacity: 0;
 }

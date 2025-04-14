@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {updateLeaderboard} from '../Firebase/LeaderboardManager'
+    import {updateLeaderboard} from '../Firebase/SuikaLeaderboardManager'
     import {State, anonymousAliases} from './SuikaController.svelte'
 
     interface stageParams {

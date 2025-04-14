@@ -1,0 +1,51 @@
+#leaderBoard{
+    width: 18vw;
+    min-width: 325px;
+
+    --bg1: var(--bg-1);
+    --bg2: var(--bg-2);
+}
+
+#leaderBoard{
+    border: 2px white solid;
+    text-align: center;
+    border-radius: 20px;
+    overflow: hidden;
+    border-spacing: 0;
+
+    top: 20%;
+
+    position: absolute;
+
+    th{
+        padding: 10px 0px;
+        text-align: center;
+
+        h2{
+            width: fit-content !important;
+        }
+
+        background-color: var(--bg1);
+    }
+
+    td{
+        padding: 5px 20px;
+    }
+
+    tr:nth-child(odd){
+        background-color: var(--bg2);
+    }
+    
+    tr:nth-child(even){
+        background-color: var(--bg1);
+    }
+
+    .icon{
+        width: 1.25em;
+
+        img{
+            width: 1.25em;
+            height: 1.25em;
+        }
+    }
+}
