@@ -1,19 +1,20 @@
 <script lang="ts">
     import {updateLeaderboard} from '../Firebase/SuikaLeaderboardManager'
-    import {State, anonymousAliases} from './SuikaController.svelte'
+    import {anonymousAliases} from './SuikaController.svelte'
+    import sparkles from './sparkles.png'
 
     interface stageParams {
-        setGameMode: (mode: State) => void;
+        resetGame: () => void;
         points: number;
     }
 
-    let {setGameMode, points} : stageParams = $props();
+    let {resetGame, points} : stageParams = $props();
 
     let userName = $state("");
 
-    async function finishRound(choice:State){
+    async function finishRound(){
         await addToScoreboard(points)
-        setGameMode(choice)
+        resetGame()
     }
 
     async function addToScoreboard(pts :number){
@@ -32,11 +33,9 @@
 </script>
 
 <div id="gameEndScreen" class="midAlign">
-    <h2>Game Over</h2>
-    <input type="text" placeholder="'sparky'" bind:value={userName}/>
-    <h2>Final Score:</h2>
-    <h2>{points}</h2>
+    <p>FINAL SCORE: {points}</p>
     <br/>
-    <p class='note'>pressing either button will save your score</p>
-    <button onclick={() => finishRound(State.playing)}>Try Again</button>
+    <input type="text" placeholder="Your Name" bind:value={userName}/>
+    <br/>
+    <button onclick={() => finishRound()}><img src={sparkles}>Play Again</button>
 </div>

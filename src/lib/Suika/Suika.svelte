@@ -400,6 +400,10 @@
                 break
         }
     }
+
+    export function playAgain(){
+        setGameMode(State.playing)
+    }
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -411,7 +415,7 @@
         onclick={dropTarget} 
         onmousemove={moveWithMouse}>
     </div>
-    <div class:hide={gameMode != State.endScreen} class="midAlign">
-        <GameOverMenu setGameMode={setGameMode} points={points}/>
+    <div class:hide={gameMode != State.endScreen}>
+        <GameOverMenu resetGame={playAgain} points={points}/>
     </div>
 </div>

@@ -13,22 +13,25 @@ button {
     margin: 10px auto;
 
     width: fit-content;
-	padding: 1rem;
-    border-radius: 8px;
-	border: none !important;
+	padding: 0.5rem 1.75rem;
+    border-radius: 2px;
+	border: black solid 1px;
 	
-    font-size: 2rem;
+    font-size: 1rem;
 	font-weight: 900;
-	color: white;
-	background: none;
-    background-color: var(--primary) !important;
-	text-transform: uppercase;
+	color: black;
+    background-color: white !important;
 
 	cursor: pointer;
 }
 
 button:hover{
-    background-color: var(--primary-highlight) !important;
+    background-color: hsl(220 20% 10%) !important;
+    color: white;
+    
+    img{
+        filter: invert();
+    }
 }
 
 h1 {
@@ -46,20 +49,20 @@ h1, h3, h2, p {
 }
 
 input{
-    width: 90%;
+    width: 80%;
     font-size: 2rem;
     text-align: center;
     padding-top: 1rem;
     border: none;
-    border-bottom: var(--primary) 2.5px solid;
+    border-bottom: var(--grey) 2.5px solid;
     font-family: 'poppins', sans-serif;
     background-color: #00000000;
-    color: white;
+    color: black;
     margin: 15px auto;
 }
 
 input:focus{
-    border-bottom: white 2.5px solid;
+    border-bottom: var(--primary) 2.5px solid;
     outline: none;
     caret-color: var(--grey);
 }
@@ -83,9 +86,7 @@ input:focus{
 }
 
 .hide{
-    opacity: 0 !important;
     visibility: collapse !important;
-    height: 0 !important;
 }
 
 .midAlign{
@@ -109,4 +110,18 @@ input:focus{
 #tintCover.cover{
     visibility: visible;
     opacity: 0.7;
+}
+
+#gameEndScreen{
+    height: 400px;
+    color: black;
+    background-color: white;
+    position: absolute;
+    left: 5.25vw;
+    top: 30vh;
+    width: fit-content;
+
+    img{
+        margin-right: 10px;
+    }
 }

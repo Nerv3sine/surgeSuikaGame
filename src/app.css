@@ -21,6 +21,8 @@
     --surge-light-grey: #e2e2e2;
     --surge-grey: #a0a0a0;
     --surge-dark-grey: #303030;
+
+    --lGrey: #CCCCCC11;
 }
 
 html,
@@ -35,6 +37,16 @@ body {
 	font-family: 'Poppins', sans-serif;
 	color: var(--txt-1);
 	background-color: var(--bg-1);
+}
+
+#bgGrid{
+    position: absolute;
+    z-index: 0;
+    background-image: linear-gradient(to right, var(--lGrey) 2px, transparent 2px),
+            linear-gradient(to bottom, var(--lGrey) 2px, transparent 2px);
+    background-size: 100px 100px;
+    width: 100vw;
+    height: 100vh;
 }
 
 h2{

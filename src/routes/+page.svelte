@@ -11,6 +11,7 @@
     }
 </script>
 
+<div id="bgGrid"></div>
 <p id="scorePts" class="display">{score}</p>
 <div id="leaderboard" class="display">
     <Leaderboard bind:this={leaderBoard}/>
