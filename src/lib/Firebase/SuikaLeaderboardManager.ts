@@ -5,8 +5,8 @@ export interface LeaderboardPosition{
     points: number;
 }
 
-const leaderboardSize = 10
-const lBoardFbDocId = getFbDoc("suika", "leaderboard")
+const leaderboardSize = 5
+const lBoardFbDocId = getFbDoc("suika", "test")
 
 export const getLeaderboard = async () => 
 {

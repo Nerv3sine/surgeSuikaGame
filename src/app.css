@@ -59,55 +59,25 @@ h1, h3, h2, p {
     position: absolute;
 }
 
-.pointsTable{
+#evoStages{
     left: calc(32.5% + 600px);
-
-    border: 2px white solid;
-    border-radius: 20px;
-    overflow: hidden;
-    border-spacing: 0;
-
-    th{
-        padding: 10px 0px;
-        text-align: center;
-        width: inherit;
-        h2{
-            width: fit-content !important;
-        }
-
-        background-color: var(--bg-1);
-    }
-
-    td{
-        padding: 5px 20px;
-    }
-
-    tr:nth-child(odd){
-        background-color: var(--bg-2);
-    }
-    
-    tr:nth-child(even){
-        background-color: var(--bg-1);
-    }
-
-    .icon{
-        width: 30px;
-
-        img{
-            width: 25px;
-            height: 25px;
-        }
-    }
+    position: absolute;
+    top: 65%;
 }
 
-#leaderBoard{
-    left: calc(30vw - 350px);
-    width: 18vw;
-    min-width: 325px;
+#leaderboard{
+    top: 58%;
+    left: calc(30vw - 200px);
 }
 
 .hoverClose{
     left: 16%;
+}
+
+#scorePts{
+    position: absolute;
+    font-weight: 600;
+    left: calc(30vw - 200px);
 }
 
 @media (max-width: 1440px) {

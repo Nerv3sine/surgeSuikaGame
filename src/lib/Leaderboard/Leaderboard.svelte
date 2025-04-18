@@ -7,10 +7,10 @@
     var leaderboard = $state(leaderboardPreset)
 
     export const updateLeaderboard = () => {
-        test()
+        fetchLeaderboard()
     }
 
-    const test = async () => {
+    const fetchLeaderboard = async () => {
         try{
             let tLeaderboard = await getLeaderboard()
             leaderboard = tLeaderboard??leaderboard
@@ -28,28 +28,12 @@
     }).toReversed()
 </script>
 
-<table id="leaderBoard">
-    <thead>
-        <tr>
-            <th></th>
-            <th>
-                <h2>Top Scores</h2>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        {#each leaderboard as lScore}
-            <tr>
-                <td class="icon">
-                    <img src={leaderBoardIcons[leaderboard.findIndex(t => t.points === lScore.points)]}/>
-                </td>
-                <td class="label" width=200>
-                    <p>{lScore.username}</p>
-                </td>
-                <td>
-                    <p>{lScore.points}</p>
-                </td>
-            </tr>
-        {/each}
-    </tbody>
-</table>
+<div id="leaderBoardComponent">
+    <p id="leaderboardHeader">( TOP 5 )</p>
+    {#each leaderboard as playerScore}
+        <div class="entry">
+            <p class="entryName">{playerScore.username}</p>
+            <p class="entryScore">SCORE: {playerScore.points}</p>
+        </div>
+    {/each}
+</div>

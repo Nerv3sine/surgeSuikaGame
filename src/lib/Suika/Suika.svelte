@@ -1,8 +1,11 @@
 <script lang="ts">
     import './Suika.css'
-    import {State, themeColors, tiers, sourceIconSize} from './SuikaController.svelte'
+    import {State, themeColors, tiers} from './SuikaController.svelte'
     import GameOverMenu from './GameOverMenu.svelte';
     import Matter from 'matter-js';
+
+    import particle1 from './particles/particle1.png'
+    import particle2 from './particles/particle2.png'
 
     var Engine = Matter.Engine,
         Render = Matter.Render,
@@ -15,6 +18,7 @@
 
     interface stageParams {
         updateLeaderboard: () => void;
+        updateScore: (pts:number) => void;
     }
 
     const CAT_LEGIBLE = "#00FF00";
@@ -25,9 +29,9 @@
     const ENV = 0x004
 
     const debug = false
-    var gameMode: State = $state(State.startMenu)
+    var gameMode: State = $state(State.playing)
 
-    let {updateLeaderboard} : stageParams = $props();
+    let {updateLeaderboard, updateScore} : stageParams = $props();
 
     const circleFactor = 0.12;
     const originalWidth = 600;
@@ -35,7 +39,6 @@
 
     const gameScale = 1;
 
-    const iconSize = sourceIconSize;
     const stageWidth = originalWidth * gameScale;
     const stageHeight = originalHeight * gameScale;
     const maxCircleSize = circleFactor * stageHeight;
@@ -64,7 +67,8 @@
             options: {
                 width: stageWidth,
                 height: stageHeight,
-                wireframes: false
+                wireframes: false,
+                background: "#00000000"
             }
         });
 
@@ -76,49 +80,20 @@
 
         // run the engine
         Runner.run(runner, engine);
+
+        setGameMode(State.playing)
     })
 
     const startFreshGame = () => {
         points = 0;
+        updateScore(0)
         //game boundaries
-        var leftWall = Bodies.rectangle(lBound, Math.floor(stageHeight/2), 10, Math.floor(stageHeight * 0.8), 
-        { 
-            isStatic: true,
-            render: {
-                fillStyle: themeColors.environment
-            },
-            collisionFilter:{
-                category: ENV
-            }
-        })
-        var rightWall = Bodies.rectangle(rBound, Math.floor(stageHeight/2), 10, Math.floor(stageHeight * 0.8), 
-        { 
-            isStatic: true,
-            render: {
-                fillStyle: themeColors.environment
-            },
-            collisionFilter:{
-                category: ENV
-            }
-        })
         const groundThickness = stageHeight * 0.1
         var ground = Bodies.rectangle(Math.floor(stageWidth /2), Math.floor(stageHeight - groundThickness), Math.floor(stageWidth + 100), Math.floor(groundThickness / 2), 
         { 
             isStatic: true,
             render: {
-                fillStyle: themeColors.environment
-            },
-            collisionFilter:{
-                category: ENV
-            }
-        })
-        var boundary = Bodies.rectangle(Math.floor(stageWidth /2), 0.22 * stageHeight, Math.floor(stageWidth + 100), 5, 
-        {
-            label: "warning",
-            isStatic: true,
-            isSensor: true,
-            render: {
-                fillStyle: themeColors.warning
+                fillStyle: "invisible"
             },
             collisionFilter:{
                 category: ENV
@@ -159,9 +134,43 @@
             }
         })
 
+        let visualStageWidth = stageWidth - lBound * 2
+        var boundary = Bodies.rectangle(Math.floor(stageWidth /2), 0.23 * stageHeight,  visualStageWidth, 2, 
+        {
+            label: "warning",
+            isStatic: true,
+            isSensor: true,
+            render: {
+                fillStyle: themeColors.theme
+            },
+            collisionFilter:{
+                category: ENV
+            }
+        })
+
+        var bounds = Bodies.rectangle(stageWidth/2, stageHeight/2 + 40, visualStageWidth, stageHeight*0.67, 
+        { 
+            label: "warning",
+            isStatic: true,
+            isSensor: true,
+            render: {
+                fillStyle: "transparent",
+                strokeStyle: themeColors.theme,
+                lineWidth: 2
+            },
+            collisionFilter:{
+                category: ENV
+            }
+        })
+
         // add all of the bodies to the world
-        Composite.add(engine.world, [ground, lWall, rWall, leftWall, rightWall, sensor, boundary]);
+        Composite.add(engine.world, [ground, lWall, rWall, sensor, boundary, bounds]);
         prepareNextTarget()
+    }
+
+    function addPoints(amt:number){
+        points += amt
+        updateScore(points)
     }
 
     Events.on(engine, 'collisionStart', (event) => {
@@ -186,7 +195,7 @@
                 return
             }
             let x = bodyA.position.x, y = bodyA.position.y, idx = parseInt(bodyA.label)
-            points += tiers[idx].points
+            addPoints(tiers[idx].points)
             idx++
             World.remove(engine.world, [bodyA, bodyB])
             if(idx < tiers.length){
@@ -208,7 +217,7 @@
             World.remove(engine.world, obj)
             let idx = parseInt(obj.label)
             particleExplosion(obj.position.x, obj.position.y, idx, false)
-            points += tiers[idx].points
+            addPoints(tiers[idx].points)
         }
         const cashIn = (objs : Array<Matter.Body>, finisher: Function) => {
             let obj = objs.pop()
@@ -248,11 +257,12 @@
 
     function getSafeX(idx: number){
         let x = mousePosX
+        let evo = tiers[idx]
         const sizeConsideration = 10 * gameScale
-        if(x < lBound + tiers[idx].size * maxCircleSize + sizeConsideration){
-            x = lBound + tiers[idx].size * maxCircleSize + sizeConsideration
-        }else if (x > rBound - tiers[idx].size * maxCircleSize - sizeConsideration){
-            x = rBound - tiers[idx].size * maxCircleSize - sizeConsideration
+        if(x < lBound + evo.size * maxCircleSize + sizeConsideration){
+            x = lBound + evo.size * maxCircleSize + sizeConsideration
+        }else if (x > rBound - evo.size * maxCircleSize - sizeConsideration){
+            x = rBound - evo.size * maxCircleSize - sizeConsideration
         }
         return x
     }
@@ -294,17 +304,18 @@
     function spawnCircle(x:number, y:number, idx:number, staticState:boolean = false, legible = false){
         let c = Math.floor(100 * (1 - idx / tiers.length) + 155)
 
+        let evo = tiers[idx]
         var ball = Bodies.circle(
-            x, y, tiers[idx].size*maxCircleSize,
+            x, y, evo.size*maxCircleSize,
             {
                 label: idx+"",
                 render: {
                     // fillStyle: "#FF" + returnHex2(c) + "FF",
                     fillStyle: legible == true ? CAT_LEGIBLE:CAT_ILLEGIBLE,
                     sprite: {
-                        texture: tiers[idx].icon,
-                        xScale: tiers[idx].size * 2 * (maxCircleSize/iconSize),
-                        yScale: tiers[idx].size * 2 * (maxCircleSize/iconSize)
+                        texture: evo.icon,
+                        xScale: evo.size * 2 * (maxCircleSize/evo.originalSize),
+                        yScale: evo.size * 2 * (maxCircleSize/evo.originalSize)
                     }
                 },
                 isStatic: staticState,
@@ -331,7 +342,7 @@
     }
 
     const spawnParticle = (x:number,y:number, collision: boolean) => {
-        const c = Math.random() > 0.5 ? themeColors.primary : themeColors.secondary
+        const texture = Math.random() > 0.5 ? particle1 : particle2
 
         var particle = Bodies.circle(
             x,y,5,
@@ -342,7 +353,12 @@
                 density: 0.001,
                 isSensor: !collision,
                 render: {
-                    fillStyle: c
+                    // fillStyle: c
+                    sprite: {
+                        texture: texture,
+                        xScale: 0.15,
+                        yScale: 0.15
+                    }
                 },
                 collisionFilter:{
                     category: PARTICLES,
@@ -373,7 +389,6 @@
         gameMode = mode
 
         switch(mode){
-            case State.startMenu:
             case State.playing:
                 World.clear(engine.world, false)
                 updateLeaderboard()
@@ -390,14 +405,11 @@
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <div id="game">
-    <div id="startMenu" class:hide={gameMode != State.startMenu} class="midAlign">
-        <h1>
-            Surge Suika
-        </h1>
-        <button onclick={() => setGameMode(State.playing)}>Start</button>
-    </div>
-    <div id="suika" bind:this={canvas} onclick={dropTarget} onmousemove={moveWithMouse} class:hide={gameMode != State.playing && gameMode != State.losing}>
-        <h3 id="pts" class="UI">Points: {points}</h3>
+    <div id="tintCover" class:cover={gameMode == State.endScreen}></div>
+    <div id="suika" 
+        bind:this={canvas} 
+        onclick={dropTarget} 
+        onmousemove={moveWithMouse}>
     </div>
     <div class:hide={gameMode != State.endScreen} class="midAlign">
         <GameOverMenu setGameMode={setGameMode} points={points}/>

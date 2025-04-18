@@ -39,5 +39,4 @@
     <br/>
     <p class='note'>pressing either button will save your score</p>
     <button onclick={() => finishRound(State.playing)}>Try Again</button>
-    <button onclick={() => finishRound(State.startMenu)}>Exit</button>
 </div>
