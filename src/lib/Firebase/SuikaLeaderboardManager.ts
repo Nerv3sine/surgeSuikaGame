@@ -5,7 +5,8 @@ export interface LeaderboardPosition{
     points: number;
 }
 
-const leaderboardSize = 5
+const leaderboardReadSize = 5
+const leaderboardWriteSize = 10
 const lBoardFbDocId = getFbDoc("suika", "test")
 
 export const getLeaderboard = async () => 
@@ -26,7 +27,7 @@ export const getLeaderboard = async () =>
     
     const leaderboard : LeaderboardPosition[] = []
 
-    for(let i = 1; i <= leaderboardSize; i++){
+    for(let i = 1; i <= leaderboardReadSize; i++){
         if(ents[`pts${i}`] == undefined){
             break;
         }
@@ -47,7 +48,7 @@ export const updateLeaderboard = async (newEntry: LeaderboardPosition) =>
         return
     }
     let leaderboard : LeaderboardPosition[] = lb
-    if(leaderboard.length == leaderboardSize){
+    if(leaderboard.length == leaderboardWriteSize){
         if(newEntry.points < leaderboard[leaderboard.length - 1].points){
             return
         }else{
@@ -67,10 +68,10 @@ export const updateLeaderboard = async (newEntry: LeaderboardPosition) =>
     }
     
     let data: Record<string, any> = {};
-    for (let i = 1; i <= leaderboardSize && i <= leaderboard.length; i++){
+    for (let i = 1; i <= leaderboardWriteSize && i <= leaderboard.length; i++){
         data[`user${i}`] = leaderboard[i - 1].username
         data[`pts${i}`] = leaderboard[i - 1].points
     }
     setFbDoc(lBoardFbDocId, data)
-    return leaderboard
+    return await getLeaderboard()
 }

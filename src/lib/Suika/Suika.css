@@ -67,24 +67,6 @@ input:focus{
     caret-color: var(--grey);
 }
 
-.note{
-    color: var(--grey);
-}
-
-.UI{
-    z-index: 2;
-}
-
-#pts{
-    visibility: visible;
-    font-size: larger;
-    position: relative;
-    top: 50px;
-    left: 25px;
-    height: 0;
-    color: white;
-}
-
 .hide{
     visibility: collapse !important;
 }
