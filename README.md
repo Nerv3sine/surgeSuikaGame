@@ -1,3 +1,7 @@
+# Surge Suika
+
+![image](https://github.com/user-attachments/assets/c643d72d-afec-48c6-8936-6a1a428eb4b7)
+
 # sv
 
 Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
